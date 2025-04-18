@@ -1,6 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
+from tqdm import tqdm
 
 
 def find_links(base_url, full_prefix, extensions=None):
@@ -65,12 +66,12 @@ def main():
 
     # Step 2: From one of those links, get all .pdf and .json files
     all_file_links = []
-    for link in clean_main_links:
+    for link in tqdm(clean_main_links, desc="Collecting file links"):
         files = find_links(link, site_root, extensions=('.pdf', '.json'))
         all_file_links.extend(files)
 
     # Step 3: Download files
-    for i, file_link in enumerate(all_file_links):
+    for i, file_link in enumerate(tqdm(all_file_links, desc="Downloading files")):
         save_file_from_url(file_link, save_dir)
 
 
