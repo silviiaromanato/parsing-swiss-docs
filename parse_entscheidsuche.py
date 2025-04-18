@@ -56,7 +56,7 @@ def save_file_from_url(url, save_dir):
 def main():
     base_docs_url = 'https://entscheidsuche.ch/docs/'
     site_root = 'https://entscheidsuche.ch'
-    save_dir = 'downloads'
+    save_dir = '/capstor/store/cscs/swissai/a06/datasets_raw/swiss_data_prep/entscheidsuche.ch/download'  # noqa: E501
 
     os.makedirs(save_dir, exist_ok=True)
 
