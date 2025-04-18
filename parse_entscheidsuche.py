@@ -36,7 +36,6 @@ def save_file_from_url(url, save_dir):
     """Download and save a file from a given URL to a directory."""
     filename = os.path.basename(url)
     filepath = os.path.join(save_dir, filename)
-    print(filepath)
 
     try:
         response = requests.get(url)
@@ -44,10 +43,9 @@ def save_file_from_url(url, save_dir):
 
         mode = 'w' if filename.endswith('.json') else 'wb'
         content = response.text if mode == 'w' else response.content
-        print(content)
-        # with open(filepath, mode, encoding='utf-8'
-        #           if mode == 'w' else None) as f:
-        #     f.write(content)
+        with open(filepath, mode, encoding='utf-8'
+                  if mode == 'w' else None) as f:
+            f.write(content)
 
         print(f"✅ Saved: {filename}")
     except requests.RequestException as e:
