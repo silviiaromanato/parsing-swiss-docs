@@ -68,13 +68,10 @@ def main():
     for link in clean_main_links:
         files = find_links(link, site_root, extensions=('.pdf', '.json'))
         all_file_links.extend(files)
-        break  # remove this if you want to check all folders
 
     # Step 3: Download files
     for i, file_link in enumerate(all_file_links):
         save_file_from_url(file_link, save_dir)
-        if i == 10:
-            break
 
 
 if __name__ == '__main__':
