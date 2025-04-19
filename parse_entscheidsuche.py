@@ -2,16 +2,31 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import time
 
 
-def find_links(base_url, full_prefix, extensions=None):
+def find_links(base_url, full_prefix, extensions=None, max_minutes=10):
     """Fetch all anchor links from a page,
-    optionally filtering by file extensions."""
+    optionally filtering by file extensions.
+    Will timeout after `max_minutes`."""
+
+    start_time = time.time()
+    max_seconds = max_minutes * 60
+
     try:
-        response = requests.get(base_url)
+        # Request with timeout to avoid hanging
+        response = requests.get(base_url, timeout=10)
         response.raise_for_status()
+    except requests.Timeout:
+        print(f"⏰ Timeout fetching {base_url}")
+        return []
     except requests.RequestException as e:
         print(f"❌ Error accessing {base_url}: {e}")
+        return []
+
+    # Check total elapsed time
+    if time.time() - start_time > max_seconds:
+        print(f"⚠️ Stuck at {base_url} — exceeded {max_minutes} minutes")
         return []
 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -71,7 +86,7 @@ def main():
         all_file_links.extend(files)
 
     # Step 3: Download files
-    for i, file_link in enumerate(tqdm(all_file_links, desc="Downloading files")):
+    for file_link in tqdm(all_file_links, desc="Downloading files"):
         save_file_from_url(file_link, save_dir)
 
 
