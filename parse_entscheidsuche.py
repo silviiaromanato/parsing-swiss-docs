@@ -68,10 +68,14 @@ def save_file_from_url(url, save_dir):
         print(f"❌ Failed to download {url}: {e}")
 
 
+import os
+from tqdm import tqdm
+
 def main():
     base_docs_url = 'https://entscheidsuche.ch/docs/'
     site_root = 'https://entscheidsuche.ch'
     save_dir = '/capstor/store/cscs/swissai/a06/datasets_raw/swiss_data_prep/entscheidsuche.ch/download'  # noqa: E501
+    list_dir = 'list_files.txt'
 
     os.makedirs(save_dir, exist_ok=True)
 
@@ -80,14 +84,25 @@ def main():
     clean_main_links = clean_links(raw_links, site_root)
 
     # Step 2: From one of those links, get all .pdf and .json files
-    all_file_links = []
-    for link in tqdm(clean_main_links, desc="Collecting file links"):
-        files = find_links(link, site_root, extensions=('.pdf', '.json'))
-        all_file_links.extend(files)
+    # if list not present
+    if not os.path.exists(list_dir):
+        all_file_links = []
+        for link in tqdm(clean_main_links, desc="Collecting file links"):
+            files = find_links(link, site_root, extensions=('.pdf', '.json'))
+            all_file_links.extend(files)
+
+        # save list
+        with open(list_dir, 'w') as f:
+            for url in all_file_links:
+                f.write(f"{url}\n")
+    else:
+        with open(list_dir, 'r') as f:
+            all_file_links = [line.strip() for line in f.readlines()]
 
     # Step 3: Download files
     for file_link in tqdm(all_file_links, desc="Downloading files"):
         save_file_from_url(file_link, save_dir)
+
 
 
 if __name__ == '__main__':
