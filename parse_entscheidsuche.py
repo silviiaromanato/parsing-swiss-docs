@@ -68,7 +68,7 @@ def main():
         return [lst[i:i + batch_size] for i in range(0, len(lst), batch_size)]
 
     # Create batches of main links
-    batches = batch_list(clean_main_links, 2)[7:]
+    batches = batch_list(clean_main_links, 2)[8:]
     print(f"Divided into {len(batches)} batches.")
 
     # Step 2: From each batch of links, get all .pdf and .json files
