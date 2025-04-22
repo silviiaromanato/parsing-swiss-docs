@@ -79,31 +79,21 @@ def main():
     for i, batch in enumerate(tqdm(batches, desc="Collecting batches")):
         print("Processing batch:", i)
 
-        # Skip batch if all folders exist
-        batch_done = True
-        for link in batch:
-            folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
-            save_dir_folder = os.path.join(save_dir, folder_name)
-            if ((not os.path.exists(save_dir_folder)) or
-               (not os.listdir(save_dir_folder))):
-                batch_done = False
-                break
-
-        if batch_done:
-            print(f"Batch {i} already processed. Skipping.")
-            continue
-
         # Process batch
         for link in batch:
-            print("Processing folder: ", link)
             folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
+            print("Processing folder: ", folder_name)
+
+            # Skip if done already
             save_dir_folder = os.path.join(save_dir, folder_name)
+            if ((not os.path.exists(save_dir_folder)) or (not os.listdir(save_dir_folder))):  # noqa: E501
+                print(folder_name, "already processed, skipping.")
+                continue
 
             os.makedirs(save_dir_folder, exist_ok=True)
 
             files = find_links(link, site_root, extensions=('.pdf', '.json'))
-            for file_link in tqdm(files,
-                                  desc=f"Downloading files to {folder_name}"):
+            for file_link in tqdm(files, desc=f"Downloading files to {folder_name}"):  # noqa: E501
                 filename = os.path.basename(file_link)
                 filepath = os.path.join(save_dir_folder, filename)
                 if os.path.exists(filepath):
