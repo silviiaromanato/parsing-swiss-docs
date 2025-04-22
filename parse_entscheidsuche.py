@@ -86,7 +86,7 @@ def main():
 
             # Skip if done already
             save_dir_folder = os.path.join(save_dir, folder_name)
-            if ((not os.path.exists(save_dir_folder)) or (not os.listdir(save_dir_folder))):  # noqa: E501
+            if os.path.exists(save_dir_folder):  # noqa: E501
                 print(folder_name, "already processed, skipping.")
                 continue
 
