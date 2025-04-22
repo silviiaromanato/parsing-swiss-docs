@@ -81,7 +81,7 @@ def main():
         # Process batch
         for link in batch:
             folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
-            print("Processing folder: ", folder_name)
+            print("\n*** \nProcessing folder: ", folder_name)
 
             # Skip if done already
             save_dir_folder = os.path.join(save_dir, folder_name)
