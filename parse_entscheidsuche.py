@@ -13,8 +13,10 @@ def find_links(base_url, full_prefix, extensions=None):
 
     soup = BeautifulSoup(response.text, 'html.parser')
     links = []
+    soup_a = soup.find_all('a', href=True)
+    print('done scraping the links')
 
-    for a in tqdm(soup.find_all('a', href=True), desc="Finding links"):
+    for a in tqdm(soup_a, desc="Finding links"):
         href = a['href']
         full_link = full_prefix + href
         if not extensions or full_link.lower().endswith(extensions):
@@ -93,7 +95,7 @@ def main():
 
         # Process batch
         for link in batch:
-            print("processing folder: ", link)
+            print("Processing folder: ", link)
             folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
             save_dir_folder = os.path.join(save_dir, folder_name)
 
