@@ -75,7 +75,7 @@ def main():
 
     # Step 2: From each batch of links, get all .pdf and .json files
     for i, batch in enumerate(tqdm(batches, desc="Collecting batches")):
-        print("Processing batch:", batch)
+        print("Processing batch:", i)
 
         # Skip batch if all folders exist
         batch_done = True
@@ -93,6 +93,7 @@ def main():
 
         # Process batch
         for link in batch:
+            print("processing folder: ", link)
             folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
             save_dir_folder = os.path.join(save_dir, folder_name)
 
