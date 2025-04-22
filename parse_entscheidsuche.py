@@ -5,18 +5,20 @@ from tqdm import tqdm
 
 
 def find_links(base_url, full_prefix, extensions=None):
-    """Fetch all anchor links from a page,
-    optionally filtering by file extensions."""
+    """Fetch and filter anchor links from a page using
+    a single for loop with tqdm."""
 
-    # Request with timeout to avoid hanging
     response = requests.get(base_url)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, 'html.parser')
-    links = [full_prefix + a['href'] for a in soup.find_all('a', href=True)]
+    links = []
 
-    if extensions:
-        links = [link for link in links if link.lower().endswith(extensions)]
+    for a in tqdm(soup.find_all('a', href=True), desc="Finding links"):
+        href = a['href']
+        full_link = full_prefix + href
+        if not extensions or full_link.lower().endswith(extensions):
+            links.append(full_link)
 
     return links
 
