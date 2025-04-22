@@ -91,7 +91,7 @@ def main():
             file_names = [os.path.basename(f) for f in files]
 
             # Get list of already saved files
-            existing_files = set(os.listdir(save_dir_folder))
+            existing_files = os.listdir(save_dir_folder)
             print(file_names[:10])
             print(existing_files[:10])
 
