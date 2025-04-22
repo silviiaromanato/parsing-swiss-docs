@@ -92,6 +92,8 @@ def main():
 
             # Get list of already saved files
             existing_files = set(os.listdir(save_dir_folder))
+            print(file_names[:10])
+            print(existing_files[:10])
 
             # Filter to only the files that aren't already present
             new_files = [(f, name)
