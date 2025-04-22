@@ -83,22 +83,30 @@ def main():
             folder_name = link.split('/')[-2] if link.endswith("/") else link.split('/')[-1]  # noqa: E501
             print("\n*** \nProcessing folder: ", folder_name)
 
-            # Skip if done already
             save_dir_folder = os.path.join(save_dir, folder_name)
-            if os.path.exists(save_dir_folder) and \
-                len([f for f in os.listdir(save_dir_folder) if os.path.isfile(
-                    os.path.join(save_dir_folder, f))]) >= 100:
+            os.makedirs(save_dir_folder, exist_ok=True)
+
+            # Find links to files
+            files = find_links(link, site_root, extensions=('.pdf', '.json'))
+            file_names = [os.path.basename(f) for f in files]
+
+            # Get list of already saved files
+            existing_files = set(os.listdir(save_dir_folder))
+
+            # Filter to only the files that aren't already present
+            new_files = [(f, name)
+                         for f, name in zip(files, file_names)
+                         if name not in existing_files]
+
+            if not new_files:
                 print(folder_name, "already processed, skipping.\n\n")
                 continue
 
-            os.makedirs(save_dir_folder, exist_ok=True)
-
-            files = find_links(link, site_root, extensions=('.pdf', '.json'))
-            for file_link in tqdm(files, desc=f"Downloading files to {folder_name}"):  # noqa: E501
-                filename = os.path.basename(file_link)
-                filepath = os.path.join(save_dir_folder, filename)
-                if os.path.exists(filepath):
-                    continue
+            for file_link in tqdm(new_files, desc=f"Downloading files to {folder_name}"):  # noqa: E501
+                # filename = os.path.basename(file_link)
+                # filepath = os.path.join(save_dir_folder, filename)
+                # if os.path.exists(filepath):
+                #     continue
                 save_file_from_url(file_link, save_dir_folder)
 
 
