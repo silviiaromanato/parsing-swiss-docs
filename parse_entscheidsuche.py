@@ -77,7 +77,6 @@ def main():
 
     # Step 2: From each batch of links, get all .pdf and .json files
     for i, batch in enumerate(tqdm(batches, desc="Collecting batches")):
-        print("Processing batch:", i)
 
         # Process batch
         for link in batch:
@@ -87,7 +86,7 @@ def main():
             # Skip if done already
             save_dir_folder = os.path.join(save_dir, folder_name)
             if os.path.exists(save_dir_folder):  # noqa: E501
-                print(folder_name, "already processed, skipping.")
+                print(folder_name, "already processed, skipping.\n\n")
                 continue
 
             os.makedirs(save_dir_folder, exist_ok=True)
@@ -99,8 +98,6 @@ def main():
                 if os.path.exists(filepath):
                     continue
                 save_file_from_url(file_link, save_dir_folder)
-
-        print('Done with batch number:', i)
 
 
 if __name__ == '__main__':
