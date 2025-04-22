@@ -92,11 +92,9 @@ def main():
 
             # Get list of already saved files
             existing_files = os.listdir(save_dir_folder)
-            print(file_names[:10])
-            print(existing_files[:10])
 
             # Filter to only the files that aren't already present
-            new_files = [(f, name)
+            new_files = [f
                          for f, name in zip(files, file_names)
                          if name not in existing_files]
 
