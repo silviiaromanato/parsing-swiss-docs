@@ -99,6 +99,10 @@ def main():
             files = find_links(link, site_root, extensions=('.pdf', '.json'))
             for file_link in tqdm(files,
                                   desc=f"Downloading files to {folder_name}"):
+                filename = os.path.basename(file_link)
+                filepath = os.path.join(save_dir_folder, filename)
+                if os.path.exists(filepath):
+                    continue
                 save_file_from_url(file_link, save_dir_folder)
 
         print('Done with batch number:', i)
